@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Trang cá nhân - Châu Thế Phong</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+    :root{
+      --bg:#fff8fb;
+      --card:#ffffff;
+      --text:#0b1220;
+      --accent:#ff4d6d;
+      --muted:#4b5563;
+      --grad-a:#ff6b6b;
+      --grad-b:#ffd166;
+      --grad-c:#7c5cff;
+      --grad-d:#22c1c3;
+      --particle-opacity:0.95;
+    }
+
+    html,body{height:100%}
+    body{
+      font-family:"Inter",system-ui,Arial,sans-serif;
+      margin:0; padding:28px;
+      color:var(--text);
+      background:linear-gradient(120deg,var(--grad-a),var(--grad-b),var(--grad-c),var(--grad-d));
+      background-size:300% 300%;
+      animation:gradientShift 14s ease infinite;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      position:relative;
+      overflow-x:hidden;
+    }
+
+    /* decorative blobs + overlay */
+    body::before{
+      content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+      background:
+        radial-gradient(600px 400px at 8% 18%, rgba(255,255,255,0.06), transparent 12%),
+        radial-gradient(500px 350px at 92% 82%, rgba(0,0,0,0.06), transparent 14%);
+      mix-blend-mode:overlay;
+    }
+    body::after{
+      content:""; position:fixed; inset:-20% -10% -20% -10%; pointer-events:none; z-index:0;
+      background:
+        radial-gradient(30% 30% at 10% 20%, rgba(255,107,107,0.18), transparent 25%),
+        radial-gradient(35% 35% at 80% 70%, rgba(124,92,255,0.16), transparent 28%),
+        radial-gradient(25% 25% at 50% 40%, rgba(34,193,195,0.10), transparent 30%);
+      filter:blur(60px) saturate(1.05);
+      opacity:0.95;
+      animation:blobMove 18s ease-in-out infinite;
+    }
+
+    /* dark mode */
+    body.dark{
+      --bg:#071226;
+      --card:#071829;      /* darker card background */
+      --text:#eaf5ff;      /* brighter readable text */
+      --accent:#60a5fa;
+      --muted:#9aa9c7;
+      --particle-opacity:0.55;
+      background:linear-gradient(120deg,#071226,#0b2740,#2a1f59,#0ea5a9);
+      background-size:300% 300%;
+    }
+    body.dark::before{ background:
+      radial-gradient(600px 400px at 8% 18%, rgba(255,255,255,0.02), transparent 12%),
+      radial-gradient(500px 350px at 92% 82%, rgba(0,0,0,0.28), transparent 14%); }
+    body.dark::after{ filter:blur(70px) saturate(0.9); opacity:0.9; }
+
+    @keyframes gradientShift{
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+    }
+    @keyframes blobMove{
+      0%{transform:translate3d(-6%,-2%,0) scale(1)}
+      50%{transform:translate3d(6%,4%,0) scale(1.06)}
+      100%{transform:translate3d(-6%,-2%,0) scale(1)}
+    }
+
+    /* layout */
+    .container{ max-width:980px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:20px; position:relative; z-index:1;}
+    .header{text-align:center; margin-bottom:28px; position:relative; z-index:1}
+    .hero{ display:inline-flex; align-items:center; gap:16px; background:linear-gradient(135deg,#fff,#fbfbff); padding:16px 20px; border-radius:14px; box-shadow:0 6px 18px rgba(16,24,40,0.06); transition:transform .25s; }
+    .hero:hover{ transform:translateY(-6px); }
+    .avatar{ width:72px; height:72px; border-radius:50%; display:grid; place-items:center; background:linear-gradient(135deg,var(--accent),#06b6d4); color:#fff; font-weight:700; box-shadow:0 10px 30px rgba(0,0,0,0.12); animation:float 6s ease-in-out infinite;}
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+    .hero h1{ margin:0; font-size:1.05rem; color:var(--accent)}
+    .subtitle{ font-size:.95rem; color:var(--muted); margin-top:6px; min-height:20px }
+
+    .box{
+      position:relative; z-index:1; background:var(--card); padding:18px; border-radius:12px; text-align:center;
+      overflow:hidden; box-shadow:0 8px 26px rgba(16,24,40,0.06); transition:transform .28s, box-shadow .28s, opacity .4s;
+      opacity:0; transform:translateY(12px) scale(.995); will-change:transform,opacity;
+    }
+    .box.visible{ opacity:1; transform:translateY(0) scale(1) }
+    .box h2{ margin:0 0 10px; color:var(--text) }
+
+    /* sheen + glow */
+    .box::before{ content:""; position:absolute; inset:-6px; border-radius:16px; background: linear-gradient(120deg, rgba(255,77,109,0.10), rgba(6,182,212,0.06)); filter:blur(18px); opacity:0; transform:scale(.98); transition:opacity .35s, transform .5s;}
+    .box::after{ content:""; position:absolute; left:-60%; top:-40%; width:40%; height:180%; background: linear-gradient(120deg, rgba(255,255,255,0.22), rgba(255,255,255,0.06), rgba(255,255,255,0)); transform:rotate(25deg) translateX(-120%); transition:transform .74s cubic-bezier(.2,.8,.2,1), opacity .35s; mix-blend-mode:screen; opacity:.9; pointer-events:none; }
+    .box:hover{ transform:translateY(-8px) scale(1.01); box-shadow:0 24px 56px rgba(79,70,229,0.10); filter:brightness(1.02) }
+    .box:hover::before{ opacity:1; transform:scale(1.03); filter:blur(26px) }
+    .box:hover::after{ transform:rotate(25deg) translateX(20%); opacity:1 }
+
+    /* small controls */
+    .controls{ display:flex; gap:8px; justify-content:center; margin-top:10px }
+    .btn{ border:0; padding:8px 12px; border-radius:10px; cursor:pointer; background:linear-gradient(90deg,var(--accent),#06b6d4); color:#fff; font-weight:700; position:relative; overflow:hidden }
+    .btn.secondary{ background:#64748b }
+
+    /* ripple */
+    .ripple{ position:absolute; width:12px; height:12px; border-radius:50%; background:rgba(255,255,255,0.8); transform:translate(-50%,-50%) scale(0); pointer-events:none; animation:rip 600ms cubic-bezier(.2,.8,.2,1) }
+    @keyframes rip{ to{ transform:translate(-50%,-50%) scale(10); opacity:0 } }
+
+    /* confetti pieces */
+    .confetti{ position:fixed; width:10px; height:14px; z-index:9999; border-radius:2px; animation:confetti-fall 1000ms cubic-bezier(.2,.8,.2,1) forwards; will-change:transform,opacity }
+    @keyframes confetti-fall{ to{ transform:translateY(120vh) rotate(720deg); opacity:0 } }
+
+    /* typewriter */
+    .typewriter{ display:inline-block; border-right:2px solid var(--accent); padding-right:6px; animation:blink .9s steps(1) infinite }
+    @keyframes blink{50%{border-color:transparent}}
+
+    /* particle canvas */
+    .particle-canvas{ position:fixed; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; opacity:var(--particle-opacity); transition:opacity .35s ease; }
+
+    /* responsive */
+    @media(max-width:600px){ .hero{ flex-direction:column; gap:8px; padding:12px } }
+
+    /* custom box styles */
+    .box:nth-of-type(1){
+      background: linear-gradient(135deg, #fffaf0, #fff3e6);
+      color: #2b1f12;
+    }
+    .box:nth-of-type(1)::before{
+      background: linear-gradient(120deg, rgba(255,107,107,0.10), rgba(255,195,160,0.06));
+    }
+
+    .box:nth-of-type(2){
+      background: linear-gradient(135deg, #f0f9ff, #eef8ff);
+      color: #05264f;
+    }
+    .box:nth-of-type(2)::before{
+      background: linear-gradient(120deg, rgba(96,165,250,0.10), rgba(165,178,250,0.06));
+    }
+
+    .box:nth-of-type(3){
+      background: linear-gradient(135deg, #f0fff6, #e9fff0);
+      color: #054028;
+    }
+    .box:nth-of-type(3)::before{
+      background: linear-gradient(120deg, rgba(34,197,94,0.10), rgba(164,255,199,0.06));
+    }
+
+    .box:nth-of-type(4){
+      background: linear-gradient(135deg, #fbf0ff, #f6eeff);
+      color: #2b1650;
+    }
+    .box:nth-of-type(4)::before{
+      background: linear-gradient(120deg, rgba(124,92,255,0.10), rgba(200,180,255,0.06));
+    }
+
+    /* cải thiện tương phản trong dark mode (thêm/ghi đè vào phần style) */
+    body.dark .hero,
+    body.dark .container,
+    body.dark .box {
+      color: var(--text);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
+    }
+
+    /* make boxes visibly darker and text readable */
+    body.dark .box {
+      background: linear-gradient(180deg, #071829, #0b1224);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.55);
+      border: 1px solid rgba(255,255,255,0.03);
+    }
+
+    /* reduce sheen/overlay so it doesn't wash out text */
+    body.dark .box::after,
+    body.dark .box::before {
+      mix-blend-mode: normal;
+      opacity: 0.04;
+      filter: none;
+      background: transparent;
+    }
+
+    /* headings and important text more prominent */
+    body.dark .box h2,
+    body.dark .hero h1{
+      color: var(--text);
+      font-weight:700;
+      text-shadow: 0 1px 0 rgba(0,0,0,0.45);
+    }
+    body.dark .box p,
+    body.dark .box strong,
+    body.dark .hero .subtitle{
+      color: var(--text);
+      opacity: 1;
+    }
+
+    /* buttons: lighter text or inverted so label is clear */
+    body.dark .btn { color: #071226; background: linear-gradient(90deg,#60a5fa,#06b6d4); box-shadow:0 10px 30px rgba(6,182,212,0.10); }
+    body.dark .btn.secondary { background: linear-gradient(90deg,#475569,#334155); color:#e6eef8; }
+
+    /* avatar contrast */
+    body.dark .avatar { background: linear-gradient(135deg,#1e3a8a,#06b6d4); color:#fff; box-shadow:0 12px 36px rgba(0,0,0,0.6); }
+
+    /* toggle button */
+    body.dark #dark-toggle { background:#e6eef8; color:#071226; box-shadow:0 8px 24px rgba(0,0,0,0.25); }
+
+    /* accessibility hint */
+    body.dark { color-scheme: dark; }
+  </style>
+</head>
+<body>
+  <canvas class="particle-canvas" id="particle-canvas"></canvas>
+
+  <div class="header">
+    <div class="hero" role="banner" aria-label="Trang cá nhân">
+      <div class="avatar" aria-hidden="true">CTP</div>
+      <div style="text-align:left">
+        <h1 id="profile-name">Chào mừng đến với trang cá nhân của <span id="name-text">Châu Thế Phong</span></h1>
+        <div class="subtitle"><span id="type-target" class="typewriter"></span></div>
+        <div class="controls">
+          <button class="btn" id="edit-name">Chỉnh tên</button>
+          <button class="btn secondary" id="copy-phone">Copy SĐT</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="container" role="main">
+    <section class="box" id="info-box">
+      <h2>Thông tin cá nhân</h2>
+      <p><strong>Tên:</strong> <span id="name-text-2">Châu Thế Phong</span></p>
+      <p><strong>Số điện thoại:</strong> <span id="phone">0123456789</span></p>
+      <p><strong>Email:</strong> <span id="email">abc@nctu.edu.vn</span></p>
+      <p><strong>Địa chỉ:</strong> Tam Bình, Vĩnh Long</p>
+    </section>
+
+    <section class="box">
+      <h2>Sở thích</h2>
+      <p>Tôi yêu thích <strong>câu cá</strong>. Đó là cách tôi thư giãn và tận hưởng thời gian bên dòng sông yên bình.</p>
+    </section>
+
+    <section class="box">
+      <h2>Học đường</h2>
+      <p>Tôi đang theo học và khám phá tri thức tại trường đại học. Mục tiêu của tôi là học hỏi và phát triển bản thân mỗi ngày.</p>
+    </section>
+
+    <section class="box">
+      <h2>Quê hương</h2>
+      <p>Tam Bình, Vĩnh Long là nơi tôi sinh ra và lớn lên. Một vùng đất yên bình với những cánh đồng xanh mướt.</p>
+    </section>
+  </main>
+
+  <button id="dark-toggle" title="Bật/Tắt tối" style="position:fixed;right:18px;bottom:18px;border:0;background:var(--accent);color:#fff;width:56px;height:56px;border-radius:999px;z-index:2;cursor:pointer">🌙</button>
+  <script src="./main.js"></script>
+</body>
+</html>
